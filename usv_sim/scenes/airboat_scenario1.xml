@@ -1,19 +1,42 @@
 <?xml version="1.0"?>
-
+<!--alias-->
 <!DOCTYPE UWSimScene SYSTEM "UWSimScene.dtd" >
 
 <UWSimScene>
+<!--The oceanState block allows configuring ocean parameters which define the water characteristics.-->
   <oceanState>
+	       
+   
+    
+   
+   
+    
+    
+<!--     crestFoamHeight: How high the waves need to be before foam forms on the crest. -->
+    
+  
+	<!--windx,windy: X and Y wind force.-->
     <windx> 1.0 </windx>
     <windy> 1.0 </windy>
+	  <!-- windSpeed: Wind speed. Will affect to the amount and height of waves.-->
     <windSpeed> 5.5 </windSpeed>
+	  <!--Sets the ocean's meters height.-->
     <depth> 100 </depth>
+	  <!-- reflectionDamping: Amount of water reflexed light.水面反射光-->
     <reflectionDamping> 0.35 </reflectionDamping>
+	  <!-- waveScale: This parameter decides the wave height, 1e-7 is a reasonable value.-->
     <waveScale> 5e-8 </waveScale>
+	<!--isNotChoppy: Set the waves to be choppy.-->	
     <isNotChoppy> 0 </isNotChoppy>
+	  <!--choppyFactor: How choppy the waves are.-->
     <choppyFactor> -1.5 </choppyFactor>
+	  <!--在波峰形成泡沫之前，波浪需要多高-->
     <crestFoamHeight> 1.2 </crestFoamHeight>
+<!-- 	  oceanSurfaceHeight: Z position of the ocean surface in world coordinates. -->
     <oceanSurfaceHeight> 1 </oceanSurfaceHeight>
+<!-- 	    fog: Determines underwater visibility.
+        density: Underwater fog density, modifies particle number and visibility.
+        color: Underwater fog color (RGB parameters). -->
     <fog>
       <density> 0.1 </density>
       <color>
@@ -22,11 +45,15 @@
         <b>0.079</b>
       </color>
     </fog>
+	  
+<!--     color: Set the water color (RGB parameters). -->
+    
     <color>
         <r>0.55</r>
         <g>0.45</g>
         <b>0.33</b>
     </color>
+<!-- 	  attenuation: Changes underwater light behaviour. -->
     <attenuation>
       <r>0.15</r>
       <g>0.15 </g>
@@ -34,43 +61,93 @@
     </attenuation>
   </oceanState>
   
+<!-- 	
+	      Fixes segmentation fault when graphic card is not able to use shaders.
+    
+    offsetp,offsetr: World coordinates (position and rotation) offset. It moves the virtual zero pose of the scene. Requires (x,y,z) parameters.
+    enablePhysics: Activates or deactivates bullet physics.
+    gravity: Sets force and direction of gravity in the scene. Requires (x,y,z) parameters.
+    physicsFrequency: simulation rate (default is 60, as in Bullet).
+    physicsSubSteps: In case the framerate is lower than 60, a max number of physics calculation steps to be done. 0 (default) for automatic number of substeps.
+    physicsSolver: Solver used in bullet engine, to know: Dantzig (default), SolveProjectedGauss, SequentialImpulse.
+    showTrajectory Draws the trajectory of a vehicle, object or vehicle part in the simulator. Pressing 't' will show/hide trajectory, although it will keep drawing even in hidden state.
+        target Name of the vehicle, object or vehicle part to draw trajectory. Allows routes using '/' for deambiguation: for example girona500/part4 will draw the trajectory of the base_link present in the girona500 vehicle.
+        color Sets the color of the trajectory. Requires (r,g,b) parameter.
+        lineStyle Allows diferent line patterns configuration. To know:
+
+
+    lightRate: Sets the light ratio on the scene from 0 total darkness to infinity, default value 1.0. -->
+	
   <simParams>
+<!-- 	  disableShaders: Disable osgOcean shaders, visual performance may increase but visually quality will get drastically worse. -->
     <disableShaders> 0 </disableShaders>
+<!-- 	  resw,resh: Initial window resolution of the scene. -->
     <resw> 1152 </resw>
     <resh> 864 </resh>
   </simParams>
-
+<!-- The block camera sets the main camera parameters. 
+The main camera is the one that observes the scene and renders to the main window. -->
   <camera>
+<!-- 	  This parameter sets if the main view is able to move with the trackball or not. -->
     <freeMotion> 1 </freeMotion>
+<!-- 	  Sets the object to track if freemotion is not set. Main view will follow that object. -->
     <objectToTrack>airboat/base_link</objectToTrack>
+<!-- 	  Field of view of the main camera. -->
     <fov> 60 </fov>
+<!-- 	  Proportional relationship between width and height (width/height). -->
     <aspectRatio> 1.33 </aspectRatio>
+<!-- 	  Distance to the near plane, anything nearer this distance will not be showed. -->
     <near> 1 </near>
+<!-- 	  Distance to the far plane, anything further this distance will not be showed. -->
     <far> 10000 </far>
+<!-- 	  Initial position of the viewer in the world -->
     <position>
       <x>230</x>
       <y>95 </y>
       <z>15 </z>
     </position> 
+<!-- 	  Sets the initial rotation of the viewer. -->
     <lookAt>
       <x>245</x>
       <y>95 </y>
       <z>5 </z>
     </lookAt>
   </camera>
-
+<!-- vehicle tag is used to create and configure underwater robots and the sensors available on them. -->
   <vehicle>
+	  
+<!-- 	   name: This parameters sets the vehicle's name that will identify it.
+file: The URDF file where full description of joints, visual mesh, collision mesh...etc may be provided.
+
+
+scaleFactor: Scale for the complete vehicle (every link in URDF will be scaled).
+virtualCamera: Describes the characteristics of the camera attached to the vehicle.
+structuredLightProjector: Light projector features, may be used to simulate a laser projector or light. More info here.
+rangeSensor: Measures the distance to the nearest obstacle. More info here
+objectPicker: Simulates a grasp (without physics) attaching the nearest object to the sensor when it reaches a certain distance.
+imu: Estimates the vehicle rotation with respect to the world.
+pressureSensor: Pressure sensor.
+gpsSensor: Gives the vehicle world position. Note only works when the vehicle is near the surface.
+dvlSensor: Estimates vehicle linear speed.
+virtualRangeImage: greyscale distance image, analog to virtualCameras but with range information.
+multibeamSensor: Simulates an array of rangeSensors, returning the distance to the nearest obstacle in the ZX plane. More info here.
+simulatedDevices: Used for creating devices using the new interface for them. Deprecated, new simulated devices can be added without using it.
+echo: Example test device for new interface devices.
+ForceSensor: Uses bullet physics to simulate a force sensor in a link of the vehicle returning force torque forces for collisions. More info here.
+DredgeTool: Dredging tool available for unearthing sand buried objects. More info here -->
     <name>airboat</name>
     <file>urdf/airboat_uwsim.urdf</file>
     <jointValues>
       <joint> 0 </joint>
       <joint> 0 </joint>
     </jointValues>
+<!-- 	  position: Initial position of the vehicle. -->
      <position>
       <x> 240</x>
       <y> 95 </y>
       <z> 1.13 </z>
     </position>
+<!-- 	  orientation: Initial rotation of the vehicle, stated in RPY. -->
     <orientation>
       <r>0 </r>
       <p>0 </p>
@@ -229,7 +306,7 @@
     </orientation>
   </vehicle>
 
-
+<!-- The object block allows to include other 3D models to the scene to interact with robots. -->
 	<object>
     <name>terrain</name>
     <file>terrain/diluvio5/novo4.obj</file>
@@ -244,9 +321,9 @@
       <y>0 </y>
     </orientation>
   </object>
-
+<!-- This block is used to set up the available ROS interfaces to communicate with the simulator.  -->
   <rosInterfaces>   
-
+<!-- ROSOdomToPAT: This subscriber reads from a ROS odometry message and moves the target vehicle accordingly. -->
     <ROSOdomToPAT>
       <topic> /airboat/state </topic>
       <vehicleName> airboat </vehicleName>
@@ -302,7 +379,7 @@
       <topic> /buoy10/state </topic>
       <vehicleName> buoy10 </vehicleName>
     </ROSOdomToPAT>  
-
+<!-- This interface publishes the target vehicle pose and velocity in a ROS odometry message. -->
 	<OceanSurfaceToROSOceanVehicle>
 	<topic>/airboat/Surface/base_link</topic>
 	<vehicleName>airboat</vehicleName>
@@ -405,7 +482,7 @@
 	<vehicleName>buoy10</vehicleName>
 	<linkName>link</linkName>
     </OceanSurfaceToROSOceanVehicle>    
-        
+<!--          This subscriber read ROS joint state messages and moves the arm accordingly. -->
 	<ROSJointStateToArm> 
    		<topic>/airboat/joint_states</topic>
    		<vehicleName>airboat</vehicleName>
